@@ -22,7 +22,11 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1px;
+}
+#gameBoard > div {
+  display: flex;
   justify-content: center;
+  align-items: center;
 }
 
 .hide {
@@ -35,5 +39,10 @@
 
 .fieldStyle {
   background-color: #eee;
+  border: 1px solid #222;
+}
+
+.fail {
+  background-color: darkred;
   border: 1px solid #222;
 }

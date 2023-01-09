@@ -37,7 +37,6 @@ onload = () => {
         console.log("Something went wrong, please reset game!");
     }
   }
-  // game logic
 
   // bonus: button to return to main screen
   // bonus: some leaderboard - score
