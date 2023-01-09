@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+    <title>Minesweeper</title>
+  </head>
+  <body>
+    <!-- Main menu -->
+    <div id="mainMenu">
+      <h1 class="title">Minesweeper</h1>
+      <p>Choose game difficulty:</p>
+      <select id="gameDifficulty" name="gameDifficulty">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+      <button id="startBtn">Confirm</button>
+    </div>
+
+    <!-- Game -->
+    <div id="gameContainer" class="hide">
+      <h1 class="title">Minesweeper</h1>
+      <div id="gameBoard"></div>
+    </div>
+
+    <script src="app.js" type="module"></script>
+  </body>
+</html>
