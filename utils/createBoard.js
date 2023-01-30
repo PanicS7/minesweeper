@@ -1,10 +1,15 @@
 import generateBombs from "./generateBombs.js";
+import generateHints from "./generateHints.js";
 
 // used to create elements for grid, and store bomb placements
 function createBoard(size, bombsCount) {
   // generate bombs id
   const bombsId = generateBombs(size, bombsCount);
   console.log(bombsId);
+
+  // generate hints
+  const hintsAndBombs = generateHints(size, bombsId);
+  console.log(hintsAndBombs);
 
   // select game board
   const gameBoardElem = document.getElementById("gameBoard");
@@ -37,23 +42,20 @@ function createBoard(size, bombsCount) {
 
       // add click event
       divElem.addEventListener("click", () => {
-        console.log("clicked");
         // take just number from id
         var divId = divElem.id.match(/\d/g);
         divId = divId.join("");
 
-        // if we have bomb show it - game ends
-        if (bombsId.includes(divId)) {
+        // if bomb is at clicked field show bomb icon
+        if (hintsAndBombs[divId - 1] === "b") {
           divElem.innerHTML = "<i class='fa-solid fa-bomb'></i>";
           divElem.className = "fail";
 
-          // todo: game ends
-          console.log("game ends");
+          // game end logic
         } else {
-          // we dont have bomb at this spot, so show hint
-          divElem.innerText = "h";
+          // if not show hint for this field
+          divElem.innerText = hintsAndBombs[divId - 1];
         }
-
       });
     }
   }

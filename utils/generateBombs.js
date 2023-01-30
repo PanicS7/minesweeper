@@ -21,7 +21,7 @@ function generateBombs(size, bombsCount) {
     bombsIds.includes(randomId) ? i-- : bombsIds.push(randomId);
   }
 
-  return bombsIds.sort();
+  return bombsIds.sort((a,b) => a-b);
 }
 
 export default generateBombs;
