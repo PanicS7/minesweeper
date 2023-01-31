@@ -50,3 +50,19 @@
 .fa-flag {
   color: darkred;
 }
+
+/* end modal */
+#endModal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background-color: dodgerblue;
+  color: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.modalBg {
+  background-color: #222;
+}

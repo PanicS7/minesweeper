@@ -5,11 +5,9 @@ import generateHints from "./generateHints.js";
 function createBoard(size, bombsCount) {
   // generate bombs id
   const bombsId = generateBombs(size, bombsCount);
-  console.log(bombsId);
 
   // generate hints
   const hintsAndBombs = generateHints(size, bombsId);
-  console.log(hintsAndBombs);
 
   // select game board
   const gameBoardElem = document.getElementById("gameBoard");
@@ -21,6 +19,13 @@ function createBoard(size, bombsCount) {
 
   // counter is used for unicate id for div elements
   let counter = 1;
+
+  // end modal elem
+  const endModal = document.getElementById("endModal");
+  const gameEndMsg = document.getElementById("gameEndMsg");
+
+  // game container 
+  const gameContainer = document.getElementById("gameContainer"); 
 
   // create Field
   for (let i = 1; i <= size; i++) {
@@ -52,6 +57,13 @@ function createBoard(size, bombsCount) {
           divElem.className = "fail";
 
           // game end logic
+          alert("game end");
+          // show modal to play again or to change difficulty 
+          // select end modal
+          endModal.className = "show";
+          gameEndMsg.innerText = "GAME OVER!";
+          gameContainer.className = "hide";
+         
         } else {
           // if not show hint for this field
           divElem.innerText = hintsAndBombs[divId - 1];
