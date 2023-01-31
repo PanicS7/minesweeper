@@ -9,13 +9,14 @@ onload = () => {
 
   startBtn.addEventListener("click", () => startGame(runGame));
 
-  function startGame() {
+  function startGame(runGame, value = 0) {
     // check what options are selected and start game
-    const difficulty = document.getElementById("gameDifficulty").value;
+    const difficulty = value ? value : document.getElementById("gameDifficulty").value;
+
     // hide main menu screen and show game screen
     mainMenuElem.className = "hide";
     gameContainerElem.className = "show";
-
+    
     // run game
     runGame(difficulty);
   }
@@ -25,7 +26,7 @@ onload = () => {
     switch (difficulty) {
       case "easy":
         // 8x8 grid with 10 bombs
-        createBoard(8, 10);
+        createBoard(8, 10, difficulty);
         break;
       case "medium":
         console.log("medium");

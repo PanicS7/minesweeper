@@ -2,7 +2,7 @@ import generateBombs from "./generateBombs.js";
 import generateHints from "./generateHints.js";
 
 // used to create elements for grid, and store bomb placements
-function createBoard(size, bombsCount) {
+function createBoard(size, bombsCount, difficulty) {
   // generate bombs id
   const bombsId = generateBombs(size, bombsCount);
 
@@ -23,6 +23,8 @@ function createBoard(size, bombsCount) {
   // end modal elem
   const endModal = document.getElementById("endModal");
   const gameEndMsg = document.getElementById("gameEndMsg");
+  // end modal play btn
+  const modalBtnPlay = document.getElementById("modalBtnPlay");
 
   // game container 
   const gameContainer = document.getElementById("gameContainer"); 
@@ -57,13 +59,8 @@ function createBoard(size, bombsCount) {
           divElem.className = "fail";
 
           // game end logic
-          alert("game end");
-          // show modal to play again or to change difficulty 
-          // select end modal
-          endModal.className = "show";
-          gameEndMsg.innerText = "GAME OVER!";
-          gameContainer.className = "hide";
-         
+          // hide game board and show modal
+          setTimeout(hideGameBoard, 500, gameContainer, endModal, gameEndMsg, modalBtnPlay);
         } else {
           // if not show hint for this field
           divElem.innerText = hintsAndBombs[divId - 1];
@@ -82,7 +79,17 @@ function createBoard(size, bombsCount) {
     }
   }
 
-  
+  // show modal logic
+  function hideGameBoard(gameContainer, endModal, gameEndMsg, modalBtnPlay) {
+    // show end modal and add styles
+    endModal.className = "show";
+    gameEndMsg.innerText = "GAME OVER!";
+    // hide game board
+    gameContainer.className = "hide";
+
+    // add some data if user wish to play again at same difficulty
+    modalBtnPlay.dataset.difficulty = difficulty;
+  }
 
 }
 
