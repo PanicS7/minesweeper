@@ -40,7 +40,7 @@ function createBoard(size, bombsCount) {
       // increase counter
       counter++;
 
-      // add click event
+      // add click event (show bomb and hints)
       divElem.addEventListener("click", () => {
         // take just number from id
         var divId = divElem.id.match(/\d/g);
@@ -57,6 +57,16 @@ function createBoard(size, bombsCount) {
           divElem.innerText = hintsAndBombs[divId - 1];
         }
       });
+
+      // add right click event (show flag)
+      divElem.addEventListener("contextmenu", () => {
+        event.preventDefault();
+        // take just number from id
+        var divId = divElem.id.match(/\d/g);
+        divId = divId.join("");
+
+        divElem.innerHTML = "<i class='fa-solid fa-flag'></i>";
+      })      
     }
   }
 
