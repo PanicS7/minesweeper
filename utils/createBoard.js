@@ -20,6 +20,9 @@ function createBoard(size, bombsCount, difficulty) {
   // counter is used for unicate id for div elements
   let counter = 1;
 
+  // opened hints - used to track end of game (if user open every hind and only bombs left - game ends)
+  let openedHintsCount = size * size - bombsCount;
+
   // end modal elem
   const endModal = document.getElementById("endModal");
   const gameEndMsg = document.getElementById("gameEndMsg");
@@ -48,24 +51,7 @@ function createBoard(size, bombsCount, difficulty) {
       counter++;
 
       // add click event (show bomb and hints)
-      divElem.addEventListener("click", () => {
-        // take just number from id
-        var divId = divElem.id.match(/\d/g);
-        divId = divId.join("");
-
-        // if bomb is at clicked field show bomb icon
-        if (hintsAndBombs[divId - 1] === "b") {
-          divElem.innerHTML = "<i class='fa-solid fa-bomb'></i>";
-          divElem.className = "fail";
-
-          // game end logic
-          // hide game board and show modal
-          setTimeout(hideGameBoard, 500, gameContainer, endModal, gameEndMsg, modalBtnPlay);
-        } else {
-          // if not show hint for this field
-          divElem.innerText = hintsAndBombs[divId - 1];
-        }
-      });
+      divElem.addEventListener("click", handleClick);
 
       // add right click event (show flag)
       divElem.addEventListener("contextmenu", () => {
@@ -80,15 +66,48 @@ function createBoard(size, bombsCount, difficulty) {
   }
 
   // show modal logic
-  function hideGameBoard(gameContainer, endModal, gameEndMsg, modalBtnPlay) {
+  function hideGameBoard(gameContainer, endModal, modalBtnPlay) {
     // show end modal and add styles
     endModal.className = "show";
-    gameEndMsg.innerText = "GAME OVER!";
     // hide game board
     gameContainer.className = "hide";
 
     // add some data if user wish to play again at same difficulty
     modalBtnPlay.dataset.difficulty = difficulty;
+  }
+
+  function handleClick() {
+      // take just number from id
+      var divId = event.target.id.match(/\d/g);
+      divId = divId.join("");
+
+      // if bomb is at clicked field show bomb icon
+      if (hintsAndBombs[divId - 1] === "b") {
+        event.target.innerHTML = "<i class='fa-solid fa-bomb'></i>";
+        event.target.className = "fail";
+
+        // game end logic
+        // hide game board and show modal
+        gameEndMsg.innerText = "GAME OVER!";
+        setTimeout(hideGameBoard, 500, gameContainer, endModal, modalBtnPlay);
+      } else {
+        // if not show hint for this field
+        event.target.innerText = hintsAndBombs[divId - 1];
+
+        // disable event listener for this elem
+        event.target.removeEventListener("click", handleClick);
+
+        // track opened field, if user open every field and don't click at bomb game ends
+        openedHintsCount--;
+
+        if (openedHintsCount <= 0) {
+          console.log("game end")
+          // game end logic
+          // hide game board and show modal
+          gameEndMsg.innerText = "YOU WON!";
+          setTimeout(hideGameBoard, 500, gameContainer, endModal, gameEndMsg, modalBtnPlay);
+        }
+    }
   }
 
 }
