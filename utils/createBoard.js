@@ -55,13 +55,18 @@ function createBoard(size, bombsCount, difficulty) {
 
       // add right click event (show flag)
       divElem.addEventListener("contextmenu", () => {
-        console.log(event.target)
         event.preventDefault();
-        // take just number from id
-        var divId = divElem.id.match(/\d/g);
-        divId = divId.join("");
-
-        divElem.innerHTML = "<i class='fa-solid fa-flag'></i>";
+        // if elem is not already right clicked
+        if (event.target.id) {
+          // take just number from id
+          var divId = event.target.id.match(/\d/g);
+          divId = divId.join("");
+  
+          event.target.innerHTML = "<i class='fa-solid fa-flag'></i>";
+        } else {
+          // toggle flag
+          event.target.parentNode.innerHTML = "";
+        }
       })      
     }
   }
