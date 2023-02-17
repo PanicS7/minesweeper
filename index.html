@@ -30,7 +30,16 @@
       <p>Do you wish to play again?</p>
       <div>
         <button id="modalBtnPlay">Play again</button>
-        <button>Change difficulty</button>
+        <button id="modalBtnChangeDif">Change difficulty</button>
+      </div>
+
+      <div id="changeDifModal" class="hide">
+        <select id="gameDifficultyModal" name="gameDifficultyModal">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button id="confirmBtn">Confirm change</button>
       </div>
     </div>
 

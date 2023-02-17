@@ -55,6 +55,7 @@ function createBoard(size, bombsCount, difficulty) {
 
       // add right click event (show flag)
       divElem.addEventListener("contextmenu", () => {
+        console.log(event.target)
         event.preventDefault();
         // take just number from id
         var divId = divElem.id.match(/\d/g);

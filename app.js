@@ -8,6 +8,8 @@ onload = () => {
   const gameContainerElem = document.getElementById("gameContainer");
 
   const endModal = document.getElementById("endModal");
+  const changeDifModal = document.getElementById("changeDifModal");
+  const gameDifficultyModal = document.getElementById("gameDifficultyModal");
 
   const elements = {
     mainMenuElem,
@@ -21,6 +23,14 @@ onload = () => {
   let modalBtnPlay = document.getElementById("modalBtnPlay");
   modalBtnPlay.addEventListener("click" , () => playAgain(elements));
 
+  // Modal change dificulty - show modal
+  let modalChangeDifBtn = document.getElementById("modalBtnChangeDif");
+  modalChangeDifBtn.addEventListener("click" , () => openChangeDifModal(changeDifModal));
+
+  // Modal play again with changed difficulty
+  const confirmBtn = document.getElementById("confirmBtn");
+  confirmBtn.addEventListener("click" , () =>  playAgain(elements, gameDifficultyModal.value, changeDifModal));
+  
   // bonus: some leaderboard - score
   // bonus: timer
 };
@@ -50,24 +60,33 @@ function runGame(difficulty = 0) {
       createBoard(8, 10, difficulty);
       break;
     case "medium":
-      console.log("medium");
+      // 15x15 grid with 40 bombs
+      createBoard(15, 40, difficulty);
       break;
     case "hard":
-      console.log("hard");
+      // 22x22 grid with 100 bombs
+      createBoard(22, 100, difficulty);
       break;
     default:
       console.log("Something went wrong, please reset game!");
   }
 }
 
-function playAgain(elements) {
-  let difficulty = event.target.dataset.difficulty;
+function playAgain(elements, newDif = 0, changeDifModal = "") {
+  let difficulty = newDif == 0 ? event.target.dataset.difficulty : newDif;
+
+  // reset change modal to default hidden so next time user wont see it opened when end modal is loaded
+  changeDifModal !== "" && (changeDifModal.className = "hide");
 
   // reset data from prev game
   const gameBoardElem = document.getElementById("gameBoard");
   gameBoardElem.innerHTML = "";
 
   startGame(elements, runGame, difficulty);
+}
+
+function openChangeDifModal(elem) {
+  elem.className = "show";
 }
 
 
