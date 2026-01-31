@@ -82,10 +82,99 @@ function createBoard(size, bombsCount, difficulty) {
     modalBtnPlay.dataset.difficulty = difficulty;
   }
 
+  // Helper function to get neighboring field IDs
+  function getNeighborIds(fieldId) {
+    const neighbors = [];
+    const sizeSquared = size * size;
+    
+    // Check all 8 directions
+    const directions = [
+      -1, // left
+      1,  // right
+      -size, // top
+      size,  // bottom
+      -size - 1, // top-left
+      -size + 1, // top-right
+      size - 1,  // bottom-left
+      size + 1   // bottom-right
+    ];
+    
+    const row = Math.ceil(fieldId / size);
+    const col = fieldId % size === 0 ? size : fieldId % size;
+    
+    directions.forEach(direction => {
+      const neighborId = fieldId + direction;
+      
+      // Check if neighbor is valid (within bounds)
+      if (neighborId >= 1 && neighborId <= sizeSquared) {
+        const neighborRow = Math.ceil(neighborId / size);
+        const neighborCol = neighborId % size === 0 ? size : neighborId % size;
+        
+        // Check if neighbor is adjacent (within one row/column)
+        if (Math.abs(neighborRow - row) <= 1 && Math.abs(neighborCol - col) <= 1) {
+          neighbors.push(neighborId);
+        }
+      }
+    });
+    
+    return neighbors;
+  }
+
+  // Function to recursively reveal empty fields
+  function revealEmptyFields(fieldId) {
+    const divElem = document.getElementById(`field${fieldId}`);
+    
+    // If already revealed or is a bomb, return
+    if (!divElem || divElem.style.backgroundColor === '#e0e0e0' || hintsAndBombs[fieldId - 1] === "b") {
+      return;
+    }
+    
+    // Mark as revealed by changing background
+    divElem.style.backgroundColor = '#e0e0e0';
+    divElem.style.border = '1px solid #7b7b7b';
+    
+    // Remove click event listener
+    divElem.removeEventListener("click", handleClick);
+    
+    // Get the hint value for this field
+    const hintValue = hintsAndBombs[fieldId - 1];
+    
+    // Decrease opened hints count
+    openedHintsCount--;
+    
+    // If it's 0 (empty), show nothing and reveal neighbors
+    if (hintValue === 0) {
+      divElem.innerText = '';
+      
+      // Get all neighbors and reveal them recursively
+      const neighbors = getNeighborIds(fieldId);
+      neighbors.forEach(neighborId => {
+        revealEmptyFields(neighborId);
+      });
+    } else {
+      // If it's a number (1-8), show it
+      divElem.innerText = hintValue;
+    }
+    
+    // Check if game is won
+    if (openedHintsCount <= 0) {
+      console.log("game end");
+      // game end logic
+      // hide game board and show modal
+      gameEndMsg.innerText = "YOU WON!";
+      setTimeout(hideGameBoard, 500, gameContainer, endModal, modalBtnPlay);
+    }
+  }
+
   function handleClick() {
       // take just number from id
       var divId = event.target.id.match(/\d/g);
       divId = divId.join("");
+
+      // Check if field has flag
+      if (event.target.innerHTML.includes('fa-flag')) {
+        return; // Don't reveal flagged fields
+      }
 
       // if bomb is at clicked field show bomb icon
       if (hintsAndBombs[divId - 1] === "b") {
@@ -97,23 +186,9 @@ function createBoard(size, bombsCount, difficulty) {
         gameEndMsg.innerText = "GAME OVER!";
         setTimeout(hideGameBoard, 500, gameContainer, endModal, modalBtnPlay);
       } else {
-        // if not show hint for this field
-        event.target.innerText = hintsAndBombs[divId - 1];
-
-        // disable event listener for this elem
-        event.target.removeEventListener("click", handleClick);
-
-        // track opened field, if user open every field and don't click at bomb game ends
-        openedHintsCount--;
-
-        if (openedHintsCount <= 0) {
-          console.log("game end")
-          // game end logic
-          // hide game board and show modal
-          gameEndMsg.innerText = "YOU WON!";
-          setTimeout(hideGameBoard, 500, gameContainer, endModal, gameEndMsg, modalBtnPlay);
-        }
-    }
+        // Reveal the field (this will handle 0s recursively)
+        revealEmptyFields(parseInt(divId));
+      }
   }
 
 }
